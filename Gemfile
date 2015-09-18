@@ -6,24 +6,17 @@ gem 'pg'
 # Sinatra driver
 gem 'sinatra'
 gem 'sinatra-contrib'
+gem 'thin'
 
-# Use Thin for our web server
-# gem 'thin'
-
-gem 'activesupport'
-gem 'activerecord'
+gem 'activesupport', "~>4.1"
+gem 'activerecord', "~>4.1"
 
 gem 'rake'
+gem 'bcrypt-ruby'
 
 gem 'shotgun'
 
-group :test do
-  gem 'shoulda-matchers'
-  gem 'rack-test'
-end
-
-group :test, :development do
-  gem 'rspec'
-  gem 'factory_girl'
+group :development, :test do
   gem 'faker'
+  gem 'rspec'
 end

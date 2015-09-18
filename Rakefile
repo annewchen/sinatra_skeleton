@@ -86,19 +86,16 @@ namespace :generate do
 end
 
 namespace :db do
-  desc "Drop, create, and migrate the database"
-  task :reset => [:drop, :create, :migrate]
-
-  desc "Create the databases at #{DB_NAME}"
+  desc "Create the database at #{DB_NAME}"
   task :create do
-    puts "Creating development and test databases if they don't exist..."
-    system("createdb #{APP_NAME}_development && createdb #{APP_NAME}_test")
+    puts "Creating database #{DB_NAME} if it doesn't exist..."
+    exec("createdb #{DB_NAME}")
   end
 
   desc "Drop the database at #{DB_NAME}"
   task :drop do
-    puts "Dropping development and test databases..."
-    system("dropdb #{APP_NAME}_development && dropdb #{APP_NAME}_test")
+    puts "Dropping database #{DB_NAME}..."
+    exec("dropdb #{DB_NAME}")
   end
 
   desc "Migrate the database (options: VERSION=x, VERBOSE=false, SCOPE=blog)."
@@ -119,20 +116,6 @@ namespace :db do
   task :version do
     puts "Current version: #{ActiveRecord::Migrator.current_version}"
   end
-
-  desc "rollback your migration--use STEPS=number to step back multiple times"
-  task :rollback do
-    steps = (ENV['STEPS'] || 1).to_i
-    ActiveRecord::Migrator.rollback('db/migrate', steps)
-    Rake::Task['db:version'].invoke if Rake::Task['db:version']
-  end
-
-  namespace :test do
-    desc "Migrate test database"
-    task :prepare do
-      system "rake db:migrate RACK_ENV=test"
-    end
-  end
 end
 
 desc 'Start IRB with application environment loaded'
@@ -143,4 +126,4 @@ end
 desc "Run the specs"
 RSpec::Core::RakeTask.new(:spec)
 
-task :default  => :spec
+task :default  => :specs
